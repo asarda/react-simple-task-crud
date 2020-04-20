@@ -1,12 +1,28 @@
 import React, { useState } from "react";
 import shortid from "shortid";
+import { firebase } from "./firebase";
 
 function App() {
-    const [task, setTask] = useState("");
     const [tasks, setTasks] = useState([]);
+    const [task, setTask] = useState("");
     const [editMode, setEditMode] = useState(false);
     const [editTaskId, setEditTaskId] = useState("");
     const [error, setError] = useState(null);
+
+    React.useEffect(() => {
+        const getData = async () => {
+            try {
+                const db = firebase.firestore();
+                const data = await db.collection("tasks").get();
+                const arrayData = await data.docs.map((t) => ({
+                    id: t.id,
+                    ...t.data(),
+                }));
+                setTasks(arrayData);
+            } catch (e) {}
+        };
+        getData();
+    }, []);
 
     const addTask = (e) => {
         e.preventDefault();
@@ -15,7 +31,7 @@ function App() {
             setError("Empty string!");
             return;
         }
-        setTasks([...tasks, { id: shortid.generate(), nameTask: task }]);
+        setTasks([...tasks, { id: shortid.generate(), name: task }]);
         setTask("");
         setError(null);
     };
@@ -28,7 +44,7 @@ function App() {
             return;
         }
         const tasksEdited = tasks.map((t) =>
-            t.id === editTaskId ? { id: editTaskId, nameTask: task } : t
+            t.id === editTaskId ? { id: editTaskId, name: task } : t
         );
 
         setTasks(tasksEdited);
@@ -45,7 +61,7 @@ function App() {
 
     const enableEditMode = (t) => {
         setEditMode(true);
-        setTask(t.nameTask);
+        setTask(t.name);
         setEditTaskId(t.id);
     };
 
@@ -66,9 +82,7 @@ function App() {
                                     id={item.id}
                                     className="list-group-item"
                                 >
-                                    <span className="lead">
-                                        {item.nameTask}
-                                    </span>
+                                    <span className="lead">{item.name}</span>
                                     <div
                                         className="btn btn-danger btn-sm float-right mx-2"
                                         onClick={() => deleteTask(item.id)}
