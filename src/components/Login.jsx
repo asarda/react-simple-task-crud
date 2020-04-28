@@ -9,7 +9,7 @@ const Login = () => {
         e.preventDefault();
         if (!email.trim()) {
             console.log("no email");
-        }
+        
     };
 
     return (
