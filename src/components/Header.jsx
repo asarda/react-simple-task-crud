@@ -21,7 +21,7 @@ const Header = () => {
                     id="navbarTogglerDemo01"
                 >
                     <a className="navbar-brand  mr-auto" href="#">
-                        <h1 class="display-4">Simple CRUD tasks</h1>
+                        <h1 className="display-4">Simple CRUD tasks</h1>
                     </a>
                     <div className="navbar-nav">
                         <NavLink
@@ -38,6 +38,13 @@ const Header = () => {
                             to="/tasks"
                         >
                             Tasks
+                        </NavLink>
+                        <NavLink
+                            className="nav-item nav-link"
+                            activeClassName="active"
+                            to="/tasks"
+                        >
+                            Admin
                         </NavLink>
                         <NavLink
                             className="nav-item nav-link"

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { firebase } from "./firebase";
+import { db } from "./firebase";
 import Header from "./components/Header";
 import Login from "./components/Login";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
@@ -14,7 +14,6 @@ function App() {
     React.useEffect(() => {
         const getData = async () => {
             try {
-                const db = firebase.firestore();
                 const data = await db.collection("tasks").get();
                 const arrayData = data.docs.map((t) => ({
                     id: t.id,
@@ -34,7 +33,6 @@ function App() {
             return;
         }
         try {
-            const db = firebase.firestore();
             const newTask = {
                 name: task,
                 fecha: Date.now(),
@@ -53,7 +51,6 @@ function App() {
             return;
         }
         try {
-            const db = firebase.firestore();
             db.collection("tasks").doc(editTaskId).update({
                 name: task,
             });
@@ -72,7 +69,6 @@ function App() {
 
     const deleteTask = async (taskId) => {
         try {
-            const db = firebase.firestore();
             const data = db.collection("tasks").doc(taskId).delete();
 
             const filterTask = tasks.filter((e) => e.id !== taskId);
