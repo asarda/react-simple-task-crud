@@ -1,7 +1,15 @@
 import React from "react";
 import { BrowserRouter as Link, NavLink } from "react-router-dom";
+import { auth } from "../firebase";
+import { withRouter } from "react-router";
 
-const Header = () => {
+const Header = (props) => {
+    const logout = () => {
+        auth.signOut().then(() => {
+            props.history.push("/login");
+        });
+    };
+    console.log("props header: ", props);
     return (
         <div>
             <nav className="navbar navbar-expand-lg navbar-light bg-light mb-5">
@@ -39,20 +47,31 @@ const Header = () => {
                         >
                             Tasks
                         </NavLink>
-                        <NavLink
-                            className="nav-item nav-link"
-                            activeClassName="active"
-                            to="/tasks"
-                        >
-                            Admin
-                        </NavLink>
-                        <NavLink
-                            className="nav-item nav-link"
-                            activeClassName="active"
-                            to="/login"
-                        >
-                            Login
-                        </NavLink>
+                        {props.userLogged !== null ? (
+                            <NavLink
+                                className="nav-item nav-link"
+                                activeClassName="active"
+                                to="/admin"
+                            >
+                                Admin
+                            </NavLink>
+                        ) : null}
+                        {props.userLogged !== null ? (
+                            <button
+                                className="btn btn-dark"
+                                onClick={() => logout()}
+                            >
+                                Logout
+                            </button>
+                        ) : (
+                            <NavLink
+                                className="nav-item nav-link"
+                                activeClassName="active"
+                                to="/login"
+                            >
+                                Login
+                            </NavLink>
+                        )}
                     </div>
                 </div>
             </nav>
@@ -60,4 +79,4 @@ const Header = () => {
     );
 };
 
-export default Header;
+export default withRouter(Header);
